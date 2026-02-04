@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Encrypted Messenger</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  </head>
+  <body>
+    <div class="grain"></div>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Encrypted Messenger</p>
+          <h1>Send private messages without the terminal.</h1>
+          <p class="lead">Register, log in, and chat with a clean web UI that keeps your encryption flow intact.</p>
+        </div>
+        <div class="status-card">
+          <p class="status-label">Session Status</p>
+          <p class="status-value" id="status">Disconnected</p>
+          <p class="status-sub" id="status-sub">Waiting for updates...</p>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <h2>Account</h2>
+          <form id="register-form" class="stack">
+            <label>
+              <span>Register Username</span>
+              <input name="username" placeholder="alice" maxlength="15" required>
+            </label>
+            <button type="submit">Register</button>
+          </form>
+          <form id="login-form" class="stack">
+            <label>
+              <span>Login Username</span>
+              <input name="username" placeholder="alice" maxlength="15" required>
+            </label>
+            <button type="submit">Login</button>
+          </form>
+          <form id="logout-form" class="stack">
+            <button type="submit" class="ghost">Logout</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <h2>Send Message</h2>
+          <form id="send-form" class="stack">
+            <label>
+              <span>Recipient</span>
+              <input name="username" placeholder="bob" maxlength="15" required>
+            </label>
+            <label>
+              <span>Message</span>
+              <textarea name="message" rows="4" placeholder="Write your message" required></textarea>
+            </label>
+            <button type="submit">Send Securely</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <h2>History</h2>
+          <form id="history-form" class="stack">
+            <label>
+              <span>Chat Partner</span>
+              <input name="username" placeholder="bob" maxlength="15" required>
+            </label>
+            <button type="submit">Load History</button>
+          </form>
+          <form id="delete-form" class="stack">
+            <label>
+              <span>Delete History With</span>
+              <input name="username" placeholder="bob" maxlength="15" required>
+            </label>
+            <button type="submit" class="ghost">Delete History</button>
+          </form>
+          <div class="history" id="history"></div>
+        </div>
+      </section>
+
+      <section class="feed">
+        <div class="feed-header">
+          <h2>Live Feed</h2>
+          <p>System messages and delivered chat will appear here.</p>
+        </div>
+        <div class="feed-list" id="feed"></div>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>

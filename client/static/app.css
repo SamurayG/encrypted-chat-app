@@ -1,0 +1,232 @@
+:root {
+  color-scheme: light;
+  --ink: #12151c;
+  --muted: #6d7382;
+  --panel: #ffffff;
+  --accent: #0c6cff;
+  --accent-deep: #0a2f73;
+  --soft: #f5f6fb;
+  --ring: rgba(12, 108, 255, 0.25);
+  --shadow: 0 24px 60px rgba(10, 47, 115, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Space Grotesk", "Urbanist", sans-serif;
+  color: var(--ink);
+  background: radial-gradient(circle at top, #e8f1ff 0%, #f9f7ff 55%, #fdf5f0 100%);
+  min-height: 100vh;
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+.shell {
+  position: relative;
+  z-index: 1;
+  padding: 48px 6vw 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+h1 {
+  font-size: clamp(32px, 4vw, 48px);
+  margin: 0 0 12px;
+}
+
+.lead {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 560px;
+}
+
+.status-card {
+  background: var(--panel);
+  padding: 20px 24px;
+  border-radius: 18px;
+  min-width: 220px;
+  box-shadow: var(--shadow);
+  border: 1px solid #e5e9f4;
+}
+
+.status-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin: 0 0 8px;
+}
+
+.status-value {
+  font-size: 20px;
+  margin: 0 0 4px;
+}
+
+.status-sub {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.panel {
+  background: var(--panel);
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid #e5e9f4;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+label span {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #d7dceb;
+  font-family: inherit;
+  font-size: 14px;
+  background: var(--soft);
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+button {
+  border: none;
+  padding: 12px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 14px 30px rgba(12, 108, 255, 0.28);
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button.ghost {
+  background: #f0f2ff;
+  color: var(--accent-deep);
+  box-shadow: none;
+}
+
+.feed {
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 24px;
+  padding: 24px;
+  border: 1px solid #e5e9f4;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.feed-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.feed-header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.feed-list,
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.feed-item {
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: #f6f8ff;
+  border: 1px solid #dee4ff;
+  font-size: 14px;
+}
+
+.feed-item.message {
+  background: #e9f6ff;
+  border-color: #c2e6ff;
+}
+
+.feed-item.system {
+  background: #fff8eb;
+  border-color: #fde0b1;
+}
+
+@media (max-width: 720px) {
+  .shell {
+    padding: 32px 6vw 48px;
+  }
+
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

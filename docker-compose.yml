@@ -8,6 +8,8 @@ services:
     build: ./client
     container_name: client1-container
     tty: true
+    ports:
+      - "8080:5000"
 
   client2:
     build: ./client
