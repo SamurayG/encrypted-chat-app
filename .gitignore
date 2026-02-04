@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# Keys + local message history 
+*.pem
+*.msgenc
+accounts.csv
+
+# Docker
+*.log

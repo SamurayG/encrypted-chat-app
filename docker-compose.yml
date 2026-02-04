@@ -1,0 +1,15 @@
+services:
+  server:
+    build: ./server
+    container_name: server-container
+    tty: true
+
+  client1:
+    build: ./client
+    container_name: client1-container
+    tty: true
+
+  client2:
+    build: ./client
+    container_name: client2-container
+    tty: true
