@@ -1,30 +1,57 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, session
+import os
 import threading
+import uuid
 
 import client as chat_client
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("WEB_UI_SECRET", "dev-secret-change-me")
 
-EVENTS = []
-EVENT_LOCK = threading.Lock()
-EVENT_ID = 0
-
-
-def add_event(text, kind="system"):
-    global EVENT_ID
-    with EVENT_LOCK:
-        EVENT_ID += 1
-        EVENTS.append({"id": EVENT_ID, "kind": kind, "text": text})
+SESSION_STATES = {}
+SESSION_LOCK = threading.Lock()
 
 
-def get_events_since(since_id):
-    with EVENT_LOCK:
-        return [event for event in EVENTS if event["id"] > since_id]
+def _new_state():
+    state = {
+        "events": [],
+        "event_id": 0,
+        "lock": threading.Lock(),
+        "client": None,
+    }
+    return state
 
 
-client = chat_client.ChatClient(on_event=add_event)
-client.start_receiver()
-add_event("Web UI started. Not logged in yet.", "system")
+def _get_state():
+    with SESSION_LOCK:
+        sid = session.get("sid")
+        if not sid:
+            sid = uuid.uuid4().hex
+            session["sid"] = sid
+        state = SESSION_STATES.get(sid)
+        if not state:
+            state = _new_state()
+
+            def add_event(text, kind="system"):
+                with state["lock"]:
+                    state["event_id"] += 1
+                    state["events"].append({
+                        "id": state["event_id"],
+                        "kind": kind,
+                        "text": text,
+                    })
+
+            client = chat_client.ChatClient(on_event=add_event)
+            client.start_receiver()
+            state["client"] = client
+            add_event("Web UI started. Not logged in yet.", "system")
+            SESSION_STATES[sid] = state
+        return state
+
+
+def _events_since(state, since_id):
+    with state["lock"]:
+        return [event for event in state["events"] if event["id"] > since_id]
 
 
 @app.get("/")
@@ -39,18 +66,23 @@ def api_events():
     except ValueError:
         since = 0
 
-    events = get_events_since(since)
+    state = _get_state()
+    client = state["client"]
+    events = _events_since(state, since)
     return jsonify({
         "events": events,
         "state": {
             "logged_in": client.logged_in,
             "username": client.username,
+            "last_status": client.last_status,
         }
     })
 
 
 @app.post("/api/register")
 def api_register():
+    state = _get_state()
+    client = state["client"]
     username = request.form.get("username", "")
     ok = client.register(username)
     return jsonify({"ok": ok})
@@ -58,6 +90,8 @@ def api_register():
 
 @app.post("/api/login")
 def api_login():
+    state = _get_state()
+    client = state["client"]
     username = request.form.get("username", "")
     ok = client.login(username)
     return jsonify({"ok": ok})
@@ -65,6 +99,8 @@ def api_login():
 
 @app.post("/api/send")
 def api_send():
+    state = _get_state()
+    client = state["client"]
     username = request.form.get("username", "")
     message = request.form.get("message", "")
     ok = client.send_message(username, message)
@@ -73,6 +109,8 @@ def api_send():
 
 @app.post("/api/history")
 def api_history():
+    state = _get_state()
+    client = state["client"]
     username = request.form.get("username", "")
     history = client.view_history(username)
     return jsonify({"ok": True, "history": history})
@@ -80,6 +118,8 @@ def api_history():
 
 @app.post("/api/delete")
 def api_delete():
+    state = _get_state()
+    client = state["client"]
     username = request.form.get("username", "")
     ok = client.delete_history(username)
     return jsonify({"ok": ok})
@@ -87,6 +127,8 @@ def api_delete():
 
 @app.post("/api/logout")
 def api_logout():
+    state = _get_state()
+    client = state["client"]
     client.logout()
     return jsonify({"ok": True})
 

@@ -63,7 +63,8 @@ def parse_message(client, message):
             client.sendall(b"eUsername is taken")
             return
         clientInfo[index][0] = padded_username
-        clientInfo[index][1] = True
+        clientInfo[index][1] = False
+        client.sendall(b"eRegister Success")
 
     elif (code == "l"):
         # Login part 1

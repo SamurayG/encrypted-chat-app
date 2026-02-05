@@ -42,6 +42,9 @@ async function pollEvents() {
       if (data.state.logged_in) {
         statusEl.textContent = `Logged in as ${data.state.username}`;
         statusSub.textContent = "Ready to send secure messages.";
+      } else if (data.state.last_status === "Registration Success") {
+        statusEl.textContent = "Registration Success";
+        statusSub.textContent = "Now log in to start chatting.";
       } else {
         statusEl.textContent = "Not logged in";
         statusSub.textContent = "Register or log in to start chatting.";

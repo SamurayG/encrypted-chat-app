@@ -23,8 +23,10 @@ Use `python3 client.py` to run the program on the client side.
 Notes:
 - The UI writes private key files to the client container when you register, just like the CLI.
 - Use two client containers for multi-user testing, one with the web UI and one with the CLI or a second web UI.
+- Each browser session gets its own isolated client state (cookies), so multiple people can use the UI concurrently.
+- For a custom session secret, set `WEB_UI_SECRET` before starting `web_app.py`.
 
-### Client Commands
+### Client Commands (for use in CLI)
 
 After run the client program, you can use `help` or `h` will show the help menu.
 

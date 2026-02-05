@@ -205,6 +205,7 @@ class ChatClient:
         self.shared_key = None
         self.username = ""
         self._pending_msg = ""
+        self.last_status = ""
 
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect((self.host, self.port))
@@ -272,11 +273,18 @@ class ChatClient:
             message = b"s" + username_bytes + signature
 
             self._client_send(message)
-            self.logged_in = True
 
         elif (code == "e"):
-            # Error message from server
+            # Status or error message from server
             print_msg = message[1:].decode('utf-8')
+            if print_msg.startswith("Login Success"):
+                self.logged_in = True
+                self.last_status = "Login Success"
+            elif print_msg.startswith("Register Success"):
+                self.logged_in = False
+                self.last_status = "Registration Success"
+            else:
+                self.last_status = print_msg
             self._emit(print_msg, "system")
 
         elif (code == "m"):
@@ -445,7 +453,6 @@ class ChatClient:
         # Get bytes array in the following format: b"r"[16 bytes username][rsa public key in PEM format]
         message = b"r" + username_bytes + key_bytes
         self._client_send(message)
-        self.logged_in = True
         return True
 
     def login(self, username):
