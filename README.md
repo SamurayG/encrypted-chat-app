@@ -1,3 +1,14 @@
+## Encrypted Chat Room
+
+This project is a small end-to-end encrypted messenger with both a CLI client and a Flask-based web UI. Users can register, log in, send messages, and view or delete local chat history. The server relays messages and manages account public keys, while encryption happens on the client.
+
+### Encryption Overview
+
+- Each user creates an RSA key pair on registration; the public key is stored on the server and the private key stays local.
+- When sending a message, the clients perform a signed Diffie-Hellman key exchange to derive a shared secret.
+- That shared key is expanded with HKDF and used for AES-CBC encryption; an HMAC-SHA256 signature protects message integrity.
+- Message history is stored locally encrypted with the user's RSA public key.
+
 ## Installation
 
 First run the command `docker-compose build` to build the docker images
@@ -15,6 +26,8 @@ The server side will automatically run after the docker container is online.
 Use `python3 client.py` to run the program on the client side.
 
 ### Web UI (Flask)
+
+![Web UI Demo](demo.png)
 
 1. Enter one of the client containers: `docker exec -it <id> /bin/bash`
 1. Start the web app: `python3 web_app.py`
